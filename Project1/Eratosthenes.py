@@ -6,18 +6,48 @@
    **************************************************************************************'''
 
 import datetime                             #测试
-
-const = 10000000
+import os
+const = 8000000
 
 class io:
-
-    def __init__(self, num, init):          #以init的值初始化[init]*num
+    def __init__(self, num):          #以init的值初始化[init]*num
         self.num = num
-        if( num < const):
-            self.table = [init] * num
+        if( num <= const):
+            self.table = [1] * num
         else:
-            self.table = [init] * num
-            self.fil
+            self.table = [1] * const
+            if( os.path.exists('eratosthenes.txt')):
+                os.remove('eratosthenes.txt')
+            self.file = open('eratosthenes.txt', 'a+')
+            for i in range(const + 1, num + 1):
+                self.file.write( str(1) )
+
+    def delete(self):                       #结束写文件
+        self.file.close()
+
+    def write(self, place, value):          #修改 [place- 1] 处的内容
+        if(place <= const):
+            self.table[place - 1] = value
+        else:
+            #self.file = open('eratosthenes.txt', 'r+')
+            self.file.seek(place - const - 1, 0)
+            print(self.file.read())
+            self.file.seek(place - const - 1, 0)
+            self.file.truncate(5)
+            print(self.file.read())
+            #self.file.write( str(value) )
+
+    def read(self, place):                  #读取 [place- 1] 处的内容
+        if (place <= const):
+            return int( self.table[place - 1])
+        else:
+            self.file.seek(place - const - 1, 0)
+            return int( self.file.read(1) )
+
+list = io(const + 100)
+list.write(const + 4, 0)
+#list.write(const + 3, 0)
+list.delete()
 
 
 def eratosthenes( n ):                      #埃氏筛法 筛 1 - n 中所有素数
@@ -63,7 +93,7 @@ def eratosthenes_euler( n ):              #埃氏筛法(欧拉筛) 筛 1 - n 中
                                             #否则就在 i = p2 时被筛
                                             #但易知，其仅被筛一次
 
-num = int(input())
+'''num = int(input())
 start = datetime.datetime.now()
 c = eratosthenes_improve(num)
 end = datetime.datetime.now()
@@ -74,4 +104,4 @@ start = datetime.datetime.now()
 c = eratosthenes_euler(num)
 end = datetime.datetime.now()
 #print( (end - start).microseconds)
-print( (end - start).seconds)
+print( (end - start).seconds)'''

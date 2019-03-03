@@ -84,19 +84,48 @@ class euclid:
 
         return (x,y)
 
-a = int(input("请输入第一个值:"))
+
+def gcd(a, b):                      #最终的函数
+    if( a == 0):
+        return b
+    tmp = a % b
+    while( tmp != 0):
+        a = b
+        b = tmp
+        tmp = a % b
+    return b
+
+def euc(a, b):                     
+    if( b == 0):
+        return (0, 1)
+    x_pre = 1
+    x = 0
+    y_pre = 0
+    y = 1
+    q = int( a / b)
+    tmp = a % b
+    while( tmp != 0):
+        a = b
+        b = tmp
+
+        tmp = x_pre - q * x
+        x_pre = x
+        x = tmp
+
+        tmp = y_pre - q * y
+        y_pre = y
+        y = tmp
+
+        q = int(a / b)
+        tmp = a % b
+    return (x, y)
+
+
+'''a = int(input("请输入第一个值:"))
 b = int(input("请输入第二个值:"))
 test = euclid(a, b)
 print(test.gcd())
 print(test.gcd())
 print(test.extension())
 (x, y) = test.extension()
-print(x * a + y * b)
-
-
-
-
-
-
-
-
+print(x * a + y * b)'''

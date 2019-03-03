@@ -1,19 +1,19 @@
 '''*****************************************************************************************
    ** FileName:        Euclid.py
    ** Author:          Jiawei Hawkins
-   ** Date:            2019-03-03 ĞÇÆÚÈÕ 10:22:38
-   ** Date:            2019-03-03 ĞÇÆÚÈÕ 10:22:38
-   ** Description:     EuclidËã·¨¡¢¹ãÒåEuclidËã·¨¡¢EuclidÀ©Õ¹Ëã·¨ÊµÏÖ
+   ** Date:            2019-03-03 æ˜ŸæœŸæ—¥ 10:22:38
+   ** Date:            2019-03-03 æ˜ŸæœŸæ—¥ 10:22:38
+   ** Description:     Euclidç®—æ³•ã€å¹¿ä¹‰Euclidç®—æ³•ã€Euclidæ‰©å±•ç®—æ³•å®ç°
    **************************************************************************************'''
 
 class euclid:
 
-    def __init__(self, a, b):               #³õÊ¼»¯
+    def __init__(self, a, b):               #åˆå§‹åŒ–
         self.a = a
         self.b = b
 
-    def gcd(self):                          #EuclidËã·¨
-        
+    def gcd(self):                          #Euclidç®—æ³•
+
         if(self.b == 0):
             return self.a
         if (self.a == 0):
@@ -29,13 +29,28 @@ class euclid:
             tmp = tmp_a % tmp_b
         return tmp_b
 
-    '''def recur(self, a, b, x, y):                       #¹ãÒåEuclidËã·¨
-        if( x == 0):
-            return (0, 1)
-        if( y == 0):
-            return (1, 0)'''
 
-    def extension(self):                                #EuclidÀ©Õ¹Ëã·¨
+    def general_euclid(self):                       #å¹¿ä¹‰Euclidç®—æ³•
+        r = [int(self.a), int(self.b)]
+        q = [0,0]
+        r.append(r[0] % r[1])
+        index = 2
+        while( r[index] != 0):
+            index = index + 1
+            r.append(r[index - 2] % r[index - 1])
+            q.append( int(r[index - 3] / r[index - 2]))
+
+        x = 1                                       #ç®—æ³•:
+        y = -q[index - 1]                           #èµ·å§‹:    R(n) = R(n - 2) - q(n) * R(n - 1)
+        tmp = 0                                     #è½¬æ¢:   R(n) = x * R(n - 2) + y * R(n - 1)
+        for i in range(index - 2, -1, -1):          #            = x * R(n - 2) + y * { R(n - 3) - q(n - 1) * R(n - 2) }
+            tmp = x                                 #            = y * R(n - 3) + (x - q(n - 1) * y)
+            x = y                                   #ç»ˆæ­¢:    R(n) = x * R(-2)(a) + y * R(-1)(b)
+            y = tmp - q[i] * y
+        return (x, y)
+
+
+    def extend_euclid(self):                                #Euclidæ‰©å±•ç®—æ³•
 
         if (self.a == 0):                                #gcd(a,b) = x*a + y*b
             return (0, 1)
@@ -53,14 +68,14 @@ class euclid:
         y_pre = 0
         y = 1
         while( tmp != 0):
-            tmp_a = tmp_b                               #rµÄ×ªÒÆ·½³Ì
+            tmp_a = tmp_b                               #rçš„è½¬ç§»æ–¹ç¨‹
             tmp_b = tmp
 
-            tmp = y_pre - q * y                 #yµÄ×ªÒÆ·½³Ì
+            tmp = y_pre - q * y                 #yçš„è½¬ç§»æ–¹ç¨‹
             y_pre = y
             y = tmp
 
-            tmp = x_pre - q * x                 #xµÄ×ªÒÆ·½³Ì
+            tmp = x_pre - q * x                 #xçš„è½¬ç§»æ–¹ç¨‹
             x_pre = x
             x = tmp
 
@@ -69,14 +84,15 @@ class euclid:
 
         return (x,y)
 
-a = int(input("ÇëÊäÈëµÚÒ»¸öÖµ:"))
-b = int(input("ÇëÊäÈëµÚ¶ş¸öÖµ:"))
+a = int(input("è¯·è¾“å…¥ç¬¬ä¸€ä¸ªå€¼:"))
+b = int(input("è¯·è¾“å…¥ç¬¬äºŒä¸ªå€¼:"))
 test = euclid(a, b)
 print(test.gcd())
 print(test.gcd())
 print(test.extension())
 (x, y) = test.extension()
 print(x * a + y * b)
+
 
 
 

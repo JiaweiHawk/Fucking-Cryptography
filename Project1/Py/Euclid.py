@@ -70,7 +70,7 @@ def euc_ext(a, b):                      #Euclid扩展算法
     return (x, y)
 
 
-a = int(input("请输入第一个值:"))
+'''a = int(input("请输入第一个值:"))
 b = int(input("请输入第二个值:"))
 print( gcd(a, b))
 
@@ -78,4 +78,4 @@ print( gcd(a, b))
 print('{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )
 
 (x, y) = euc_gen(a, b)
-print('{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )
+print('{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )'''

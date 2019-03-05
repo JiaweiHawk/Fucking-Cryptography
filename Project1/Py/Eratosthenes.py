@@ -48,7 +48,7 @@ def eratosthenes_euler( n ):              #埃氏筛法(欧拉筛) 筛 1 - n 中
                                         #但易知，其仅被筛一次
 
 
-num = int(input("请输入数字（表示1 - n）：")
+'''num = int(input("请输入数字（表示1 - n）：")
 start = datetime.datetime.now()
 c = eratosthenes(num)
 end = datetime.datetime.now()
@@ -62,4 +62,4 @@ print( (end - start).seconds)
 start = datetime.datetime.now()
 c = eratosthenes_euler(num)
 end = datetime.datetime.now()
-print( (end - start).seconds)
+print( (end - start).seconds)'''

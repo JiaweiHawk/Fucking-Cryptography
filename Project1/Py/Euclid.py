@@ -26,6 +26,8 @@ def gcd(a, b):                      #Euclid算法
 #终止:    R(n) = x * R(-2)(a) + y * R(-1)(b)
 
 def euc_gen(a, b):                      #广义Euclid算法
+    if (b == 0):
+        return (1, 0)
     r = [a, b]
     q = [0, 0]
     index = 1
@@ -70,12 +72,12 @@ def euc_ext(a, b):                      #Euclid扩展算法
     return (x, y)
 
 
-'''a = int(input("请输入第一个值:"))
+a = int(input("请输入第一个值:"))
 b = int(input("请输入第二个值:"))
-print( gcd(a, b))
+print('gcd(a, b) = {0}'.format(gcd(a,b) ))
 
 (x, y) = euc_gen(a, b)
-print('{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )
+print('欧几里得逐步回代算法:{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )
 
-(x, y) = euc_gen(a, b)
-print('{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )'''
+(x, y) = euc_ext(a, b)
+print('欧几里得扩展算法:{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )

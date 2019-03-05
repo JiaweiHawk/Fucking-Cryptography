@@ -31,9 +31,9 @@ def qexp(exp, n, mod):
             n = int(n / 2)
         return (ans * base) % mod
 
-e = int(input("请输入底数:"))
-n = int(input("请输入指数:"))
-m = int(input("请输入底模数:"))
-print( (e ** n) % m)
-print( nexp(e, n, m))
-print( qexp(e, n, m))
+e = int(input("请输入底数exp:"))
+n = int(input("请输入指数n:"))
+m = int(input("请输入底模数mod:"))
+print('(Python计算)(exp ^ n) % mod = {0}'.format( (e ** n) % m) )
+print('常规模幂算法: (exp ^ n) % mod = {0}'.format(nexp(e, n, m)) )
+print('快速幂算法(exp ^ n) % mod = {0}:'.format(qexp(e, n, m)) )

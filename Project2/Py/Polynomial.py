@@ -37,7 +37,26 @@ def Gf_div(a, b):                   #求解a(x) / b(x) 即多项式的带余除�
     return (q + 1, a ^ b)
 
 
-def pol(n, m):                                      #环上的
+def pol_f(n):
+    res = []
+    k = ( 1<<n)
+    m = ( 1 << ( int(n / 2)) )
+    for i in range( k, 1 << (n + 1)):
+        flag = 1
+        for j in range(2, m):
+            #print(i)
+            if( Gf_div(i, j)[1] == 0):
+                #print('{0} {1}'.format(i, j))
+                flag = 0
+                break
+        if( flag == 1):
+            res.append(i)
+    return res
+print(pol_f(4))
+
+
+
+def pol_r(n, m):                                      #环上的
     a = []
     for i in range(n):
         a.append( random.randint(1, m))

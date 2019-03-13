@@ -37,7 +37,7 @@ def mul_4(a, b):                                          #乘法
     while( b != 0):
         if( (b & 1) == 1):
             sum = sum ^ (a << index)
-        b = int(b / 2)
+        b = b>>1
         index = index + 1
     return mod_4(sum)
 
@@ -54,7 +54,7 @@ def inv_4(b):                                       #计算乘法的逆
 def div_4(a, b):  # 除法
     if (b == 0):
         print("Error")
-        return;
+        return
     return mul_4(a, inv_4(b))
 
 
@@ -123,7 +123,7 @@ def mul_8(a, b):                                          #乘法
     while( b != 0):
         if( (b & 1) == 1):
             sum = sum ^ (a << index)
-        b = int(b / 2)
+        b = b>>1
         index = index + 1
     return mod_8(sum)
 

@@ -24,16 +24,18 @@ def qexp(exp, n, mod):
     else:
         base = exp
         ans = 1
-        while (n > 1):
-            if (n % 2 == 1):
+        while (n > 0):
+            if (n & 2 == 1):
                 ans = (ans * base) % mod
             base = (base * base) % mod
-            n = int(n / 2)
-        return (ans * base) % mod
+            n = n >> 1
+        return ans
 
 e = int(input("请输入底数exp:"))
 n = int(input("请输入指数n:"))
 m = int(input("请输入底模数mod:"))
+n = 2 ** 127 - 2
+m = n + 1
 print('(Python计算)(exp ^ n) % mod = {0}'.format( (e ** n) % m) )
 print('常规模幂算法: (exp ^ n) % mod = {0}'.format(nexp(e, n, m)) )
 print('快速幂算法(exp ^ n) % mod = {0}:'.format(qexp(e, n, m)) )

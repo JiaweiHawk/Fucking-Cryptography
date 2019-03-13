@@ -7,18 +7,18 @@
 
 
 
-def qexp(exp, n, mod):                  #之前实现好的快速幂
+def qexp(exp, n, mod):                  #之前实现的快速幂
     if( exp < 2):
         return exp
     else:
         base = exp
         ans = 1
-        while (n > 1):
-            if (n % 2 == 1):
+        while (n > 0):
+            if (n & 2 == 1):
                 ans = (ans * base) % mod
             base = (base * base) % mod
-            n = int(n / 2)
-        return (ans * base) % mod
+            n = n >> 1
+        return ans
 
 def primes(n):                       #获取n的素因数分解
     if( n < 2):

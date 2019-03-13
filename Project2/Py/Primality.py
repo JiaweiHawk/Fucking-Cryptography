@@ -151,6 +151,6 @@ def solovay(n, t):                            #Solovay-Stassen素性检验算法
 n = int(input("请输入要检测的数：") )
 t = int(input("请输入要检测的次数：") )
 print('Miller-Rabin素性检验的结果是：{0}'.format(miller(n, t)) )
-print('Miller-Rabin素性检验的结果是：{0}'.format(fermat(n, t) ) )
-print('Miller-Rabin素性检验的结果是：{0}'.format(solovay(n, t) ))
+print('Fermat素性检验的结果是：{0}'.format(fermat(n, t) ) )
+print('Solovay-Stassen素性检验的结果是：{0}'.format(solovay(n, t) ))
 input()

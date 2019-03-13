@@ -52,7 +52,6 @@ def pol_f(n):
         if( flag == 1):
             res.append(i)
     return res
-print(pol_f(4))
 
 
 
@@ -69,4 +68,20 @@ def pol_r(n, m):                                      #环上的
         a[i] = int(a[i] / tmp)
     return a
 
+n = int(input("请输入环的本原多项式的最高次："))
+m = int(input("请输入域的本原多项式的系数最大值："))
+f = int(input("请输入有限域GF(2^n)的n值："))
+print("环的{0}次本原多项式：".format(n), end = ' ')
+for j in pol_r(n + 1, m):
+    if( (n > 0 and j != 1) or n == 0):
+        print(j, end = '')
+    if( n > 1):
+        print('x ^ {0} + '.format(n), end = '')
+    elif(n == 1):
+        print('x + ', end = '')
+    n = n - 1
+print("\nGF(2^{0})域的所有本原多项式：".format(f))
+for j in pol_f(f):
+    print( bin(j))
 
+input()

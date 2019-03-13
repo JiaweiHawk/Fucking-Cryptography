@@ -142,7 +142,7 @@ def inv_8(b):                                       #计算乘法的逆
 def div_8(a, b):  # 除法
     if( b == 0):
         print("Error")
-        return ;
+        return 
     return mul_8(a, inv_8( mod_8(b) ) )
 
 

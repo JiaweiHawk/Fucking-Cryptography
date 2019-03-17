@@ -62,7 +62,7 @@ def init(m):                    #矩阵的初始化
     return matrix
 
 
-def delta(matrix):              #求矩阵的行列式,返回res^(-1)|matrix|的(|matrix|, res)
+def delta(matrix):              #求矩阵的行列式,若可你
     length = len(matrix)
     sum = 1
     res = 1
@@ -85,9 +85,9 @@ def delta(matrix):              #求矩阵的行列式,返回res^(-1)|matrix|的
                 tmp1 = int(matrix[j][row] / d)
                 for i in range(row, length):
                     matrix[j][i] = matrix[j][i] * tmp - matrix[row][i] * tmp1
-    return (sum, res)
+    return sum
             
-def inv(matrix):                #求矩阵的逆，返回res^(-1)A的(A, res)    默认矩阵可逆
+def inv(matrix):                #求矩阵的逆，返回Amod(256)的A    默认矩阵可逆
     A = []
     length = len(matrix)
     for i in range(length):
@@ -108,7 +108,7 @@ def inv(matrix):                #求矩阵的逆，返回res^(-1)A的(A, res)   
                     matrix[j][i] = matrix[j][i] * tmp - matrix[row][i] * tmp1
     for row in range(length):
         res = res * matrix[row][row]
-    return (A, res)
+    return A
     
 
 def show(matrix):
@@ -206,14 +206,9 @@ def hill_encode(keys, message):           #进行加密, 输入为信息流，�
 
 def hill_decode(keys, cipher):            #进行解密，输出为字母
     message = []
-    length = len(keys) - 1
-    index = 0
-    for i in cipher:
-        if(index == length):
-            index = 0
-        message.append(chr( ( (ord(i.lower()) - 97) ^ keys[index]) % 26 +97))
-        index = index + 1
-    return ''.join(message)
+    tmp = []
+    (k, a) = inv(keys)
+    b = euc_ext(a, )
 
 '''message = input("请输入明文信息：")
 keys = ver_key()

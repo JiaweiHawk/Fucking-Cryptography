@@ -1,11 +1,10 @@
 '''*****************************************************************************************
-   ** FileName:        Polynomial.py
+   ** FileName:        Euclid.py
    ** Author:          Jiawei Hawkins
-   ** Date:            2019-03-12 星期二 21:47:09
-   ** Description:     实现生成本原多项式的算法 环上( 在GF(2^n) )
+   ** Date:            2019-03-03 星期日 10:22:38
+   ** Date:            2019-03-03 星期日 10:22:38
+   ** Description:     Euclid算法、广义Euclid算法、Euclid扩展算法实现
    **************************************************************************************'''
-from math import log
-import random
 
 
 def gcd(a, b):                      #Euclid算法
@@ -19,67 +18,66 @@ def gcd(a, b):                      #Euclid算法
     return b
 
 
-def Gf_div(a, b):                   #求解a(x) / b(x) 即多项式的带余除法
-    if( a < b):
-        return (0, a)
-    if( a == b):
+#算法:
+#起始:    R(n) = R(n - 2) - q(n) * R(n - 1)
+#转换:   R(n) = x * R(n - 2) + y * R(n - 1)
+#            = x * R(n - 2) + y * { R(n - 3) - q(n - 1) * R(n - 2) }
+#            = y * R(n - 3) + (x - q(n - 1) * y)
+#终止:    R(n) = x * R(-2)(a) + y * R(-1)(b)
+
+def euc_gen(a, b):                      #广义Euclid算法
+    if (b == 0):
         return (1, 0)
-    q = 0
-    index = int( log(a, 2)) - int( log(b, 2))
-    while( index > 0):
-        q =q + (1<<index)
-        a = a ^ (b<<index)
-        if(a == 0):
-            break
-        index = int(log(a, 2)) - int(log(b, 2))
-    if( a < b):
-        return (q, a)
-    return (q + 1, a ^ b)
-
-
-def pol_f(n):
-    res = []
-    k = ( 1<<n)
-    m = ( 1 << ( int(n / 2)) )
-    for i in range( k, 1 << (n + 1)):
-        flag = 1
-        for j in range(2, m):
-            if( Gf_div(i, j)[1] == 0):
-                flag = 0
-                break
-        if( flag == 1):
-            res.append(i)
-    return res
+    r = [a, b]
+    q = [0, 0]
+    index = 1
+    while (r[index] != 0):
+        r.append(r[index -1] % r[index])
+        q.append(int(r[index - 1] / r[index]) )
+        index = index + 1
+    x = 1
+    y = -q[index - 1]
+    tmp = 0
+    for i in range(index - 2, -1, -1):
+        tmp = x
+        x = y
+        y = tmp - q[i] * y
+    return (x, y)
 
 
 
-def pol_r(n, m):                                      #环上的
-    a = []
-    for i in range(n):
-        a.append( random.randint(1, m))
-    if(n == 1):
-        return a
-    tmp = gcd(a[0], a[1])
-    for i in range(2, n):
-        tmp = gcd(tmp, a[i])
-    for i in range(n):
-        a[i] = int(a[i] / tmp)
-    return a
+def euc_ext(a, b):                      #Euclid扩展算法
+    if( b == 0):
+        return (0, 1)
+    x_pre = 1
+    x = 0
+    y_pre = 0
+    y = 1
+    q = int( a / b)
+    tmp = a % b
+    while( tmp != 0):
+        a = b
+        b = tmp
 
-n = int(input("请输入环上的本原多项式的最高项次数:"))
-m = int(input("请输入环上的本原多项式的系数最大值"))
-f = int(input("请输入GF(2^n)的n的次数:"))
-print('环上的随机生成{0}次本原多项式为：'.format(n, ), end = " ")
-for j in pol_r(n + 1, m):
-    if( n == 0 or (n > 0 and j != 1) ):
-        print('{0}'.format(j), end = "")
-    if(n > 1):
-        print('x ^ {0} + '.format(n), end = "")
-    if( n == 1):
-        print('x + '.format(n), end = "")
-    n = n - 1
-print('\nGF(2^{0})有限域上的所有本原多项式为:'.format(f))
-for j in pol_f(f):
-    print( bin( j) )
+        tmp = x_pre - q * x
+        x_pre = x
+        x = tmp
 
-input()
+        tmp = y_pre - q * y
+        y_pre = y
+        y = tmp
+
+        q = int(a / b)
+        tmp = a % b
+    return (x, y)
+
+
+a = int(input("请输入第一个值:"))
+b = int(input("请输入第二个值:"))
+print('gcd(a, b) = {0}'.format(gcd(a,b) ))
+
+(x, y) = euc_gen(a, b)
+print('欧几里得逐步回代算法:{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )
+
+(x, y) = euc_ext(a, b)
+print('欧几里得扩展算法:{0} * {1} + {2} * {3} = {4}'.format(x, a, y, b, gcd(a, b)) )

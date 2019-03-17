@@ -20,7 +20,7 @@ def vig_key():                      #生成维吉尼亚密码
 
 def vig_encode(keys, message):           #进行加密, 输入为字母           97为ord( 'a')
     cipher = []
-    length = len(keys) - 1
+    length = len(keys)
     index = 0
     for i in message:
         if( i.isalpha() ):
@@ -33,7 +33,7 @@ def vig_encode(keys, message):           #进行加密, 输入为字母         
 
 def vig_decode(keys, cipher):            #进行解密，输出为字母
     message = []
-    length = len(keys) - 1
+    length = len(keys)
     index = 0
     for i in cipher:
         if(index == length):
@@ -46,7 +46,7 @@ def vig_decode(keys, cipher):            #进行解密，输出为字母
 message = input("请输入明文信息：")
 keys = vig_key()
 cipher = vig_encode(keys, message)
-print('加密的信息为{0}：'.format(cipher) )
+print('加密的信息为:{0}'.format(cipher) )
 print('原信息为：{0}\n解密的信息为:{1}'.format(message, vig_decode(keys, cipher)) )
-
+input()
     

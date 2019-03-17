@@ -88,5 +88,5 @@ keys = aff_key()
 cipher = aff_encode(keys, message)
 print('加密的信息为{0}：'.format(cipher) )
 print('原信息为：{0}\n解密的信息为:{1}'.format(message, aff_decode(keys, cipher)) )
-
+input()
     

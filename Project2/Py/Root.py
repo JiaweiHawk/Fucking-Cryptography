@@ -6,7 +6,6 @@
    **************************************************************************************'''
 
 
-
 def qexp(exp, n, mod):                  #之前实现的快速幂
     if( exp < 2):
         return exp
@@ -14,12 +13,11 @@ def qexp(exp, n, mod):                  #之前实现的快速幂
         base = exp
         ans = 1
         while (n > 0):
-            if (n & 2 == 1):
+            if (n & 1 == 1):
                 ans = (ans * base) % mod
             base = (base * base) % mod
             n = n >> 1
         return ans
-
 def primes(n):                       #获取n的素因数分解
     if( n < 2):
         return []
@@ -45,16 +43,6 @@ def euler(n):                                   #φ(n)
     return n
 
 
-
-
-
-def rank(a, n):                            #计算a在n的下的阶Rank(a, n)
-    c = euler(n)
-    for i in range(2, c + 1):
-        if( gcd(i, c) != 1 and qexp(a, i, n) == 1):
-            return i
-
-
 def gcd(a, b):                      #Euclid算法
     if( a == 0):
         return b
@@ -64,6 +52,15 @@ def gcd(a, b):                      #Euclid算法
         b = tmp
         tmp = a % b
     return b
+
+
+def rank(a, n):                            #计算a在n的下的阶Rank(a, n)
+    c = euler(n)
+    for i in range(2, c + 1):
+        if( qexp(a, i, n) == 1):
+            return i
+
+
 
 
 

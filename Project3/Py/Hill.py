@@ -61,55 +61,30 @@ def init(m):                    #矩阵的初始化
             matrix[i].append( int(input("请输入({0}，{1})的值：".format(i + 1, j + 1))) )
     return matrix
 
-
-def delta(matrix):              #求矩阵的行列式,若可你
-    length = len(matrix)
-    sum = 1
-    res = 1
-    for row in range(length):
-        a = matrix[row][row]
-        if(a == 0):
-            for j in range(row + 1, length):
-                if(matrix[j][row] != 0):
-                    for col in range(row + 1, length):
-                        matrix[row][col] = matrix[row][col] + matrix[j][col]
-                    a = matrix[row][row]
-                    break
-            return (0, 0)
-        sum = sum * a
-        for j in range(row + 1, length):
-            if( matrix[j][row] != 0):
-                d = gcd(a, matrix[j][row])
-                tmp = int(a / d)
-                res = res * tmp
-                tmp1 = int(matrix[j][row] / d)
-                for i in range(row, length):
-                    matrix[j][i] = matrix[j][i] * tmp - matrix[row][i] * tmp1
-    return sum
             
-def inv(matrix):                #求矩阵的逆，返回Amod(256)的A    默认矩阵可逆
+def inv(matrix):                #求矩阵的逆，返回Amod(256)的A    默认矩阵在mod256下可逆
     A = []
     length = len(matrix)
     for i in range(length):
         tmp = [0] * length
         tmp[i] = 1
         A.append(tmp)
-    res = 1
     for row in range(length):
         a = matrix[row][row]
         for j in range(length):
             if( j != row and matrix[j][row] != 0):
                 d = gcd(a, matrix[j][row])
                 tmp = int(a / d)
-                res = res * tmp
                 tmp1 = int(matrix[j][row] / d)
                 for i in range(length):
                     A[j][i] = A[j][i] * tmp - A[row][i] * tmp1
                     matrix[j][i] = matrix[j][i] * tmp - matrix[row][i] * tmp1
     for row in range(length):
-        res = res * matrix[row][row]
+        a = euc_ext(matrix[row][row], 256)[0]
+        for i in range(length):
+            A[row][i] = (A[row][i] * a) % 256  
     return A
-    
+
 
 def show(matrix):
     m = len(matrix)
@@ -118,7 +93,6 @@ def show(matrix):
             #print('{0} {1}'.format(i, j))
             print(matrix[i][j], end = '  ')
         print('')
-
 
 def mul(a, b):                  #矩阵的相乘
     alen = len(a)
@@ -159,8 +133,9 @@ def mess2stream(message, m):               #将消息分块成流0 - 255 即一�
         else:
             ans.append(int(j, 2) )
     length = len(ans)
+    m = m * m
     if( length % m != 0):
-        ans = ans + [1] * (length % m)
+        ans = ans + [1] * (m - (length % m) )
     return ans    
 
 def stream2mess(stream):                #将编码流转换为消息
@@ -188,31 +163,46 @@ def stream2mess(stream):                #将编码流转换为消息
 def hill_key(m):                      #生成Hill密码矩阵
     return init(m)
 
-def hill_encode(keys, message):           #进行加密, 输入为信息流，输出为流密文矩阵
-    cipher = []
+def hill_encode(keys, message):           #进行加密, 输入为信息流，输出为流密文矩阵、流密文
+    cipher_matrix = []
     tmp = []
+    cipher = []
     length = len(message)
     m = len(keys)
     index = 0
-    while(index == length):
+    while(index != length):
         for i in range(m):
             tmp.append([])
             for j in range(m):
                 tmp[i].append(message[index + i * m + j])
-        cipher.append(mul(tmp, keys))
+        tmp = mul(tmp, keys)
+        for i in tmp:
+            for j in i:
+                cipher.append(j)
+        cipher_matrix.append(tmp)
         index = index + m * m
-    return cipher
+        tmp = []
+    return cipher_matrix, cipher
 
 
-def hill_decode(keys, cipher):            #进行解密，输出为字母
+def hill_decode(keys, cipher):            #进行解密，输出为流明文
     message = []
     tmp = []
-    (k, a) = inv(keys)
-    b = euc_ext(a, )
+    k = inv(keys)
+    for i in cipher:
+        tmp = mul(i, k)
+        for j in tmp:
+            for c in j:
+                message.append(c)
+    return message
 
-'''message = input("请输入明文信息：")
-keys = ver_key()
-cipher = ver_encode(keys, message)
-print('加密的信息为{0}：'.format(cipher) )
-print('原信息为：{0}\n解密的信息为:{1}'.format(message, ver_decode(keys, cipher)) )'''
-    
+m = int(input("请输入Hill矩阵维数："))
+message = input("请输入明文信息：")
+message_stream = mess2stream(message, m)
+
+keys = hill_key(m)
+
+cipher_matrix, cipher = hill_encode(keys, message_stream)
+
+print('加密的信息为{0}：'.format(''.join(stream2mess(cipher))) )
+print('原信息为：{0}\n解密的信息为:{1}'.format(message, ''.join(stream2mess(hill_decode(keys, cipher_matrix)))) )

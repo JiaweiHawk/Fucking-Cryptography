@@ -42,6 +42,7 @@ def surplus_input():                        #实现中国剩余定理的输入
             print("输入错误或无解")
         else:
             dic[m] = a
+        print('x ≡ {0} (mod {1})'.format(a, m))
         get = input("请按m a的顺序输入,如果结束所有输入 输入q退出输入:")
     return dic
 

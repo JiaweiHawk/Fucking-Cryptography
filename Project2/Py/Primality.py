@@ -24,7 +24,7 @@ def qexp(exp, n, mod):                          #之前的快速幂
         base = exp
         ans = 1
         while (n > 0):
-            if (n & 2 == 1):
+            if (n & 1 == 1):
                 ans = (ans * base) % mod
             base = (base * base) % mod
             n = n >> 1
@@ -150,8 +150,6 @@ def solovay(n, t):                            #Solovay-Stassen素性检验算法
 
 n = int(input("请输入要检测的数：") )
 t = int(input("请输入要检测的次数：") )
-n = 2 ** 127 - 1
-t = 1000
 print('Miller-Rabin素性检验的结果是：{0}'.format(miller(n, t)) )
 print('Fermat素性检验的结果是：{0}'.format(fermat(n, t) ) )
 print('Solovay-Stassen素性检验的结果是：{0}'.format(solovay(n, t) ))

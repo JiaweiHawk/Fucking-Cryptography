@@ -25,7 +25,7 @@ def qexp(exp, n, mod):
         base = exp
         ans = 1
         while (n > 0):
-            if (n & 2 == 1):
+            if (n & 1 == 1):
                 ans = (ans * base) % mod
             base = (base * base) % mod
             n = n >> 1

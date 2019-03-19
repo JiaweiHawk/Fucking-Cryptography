@@ -56,14 +56,10 @@ def sin_decode(keys, cipher):
  ** Description:     实现对于单表加密算法的字母频率攻击
  ****************************************************************************************"""
 
-sta_frequency = [['e'], ['t', 'a', 'o'], ['i', 'n', 's', 'h', 'r'], ['d', 'l'], ['c', 'm', 'w', 'f', 'g', 'y', 'p', 'b', 'u'], ['v', 'k'], ['j', 'x', 'q', 'x']]
 
-sta_double_frequency = ['th', 'he', 'in']
-
-
-def get_fre(cipher, n):                                 #cipher为密文，n为要查询的语言统计学n阶规律，返回字典
+def get_fre(cipher, n):                                 #cipher为密文，n为要查询的语言统计学n阶规律，返回数组
     fre = {}
-    for i in range(len(cipher) - n):
+    for i in range(len(cipher) - n + 1):
         if( cipher[i: i + n] in fre):
             fre[cipher[i: i + n]] = fre[cipher[i: i + n]] + 1
         else:
@@ -71,18 +67,6 @@ def get_fre(cipher, n):                                 #cipher为密文，n为�
     fre = sorted(fre.items(), key = lambda x:x[1], reverse = True)
     return [i[0] for i in fre]
 
-
-
-def get_fre_doublesame(cipher):                         #cipher为密文，返回叠词的频率
-    fre = {}
-    for i in range(len(cipher) - 1):
-        if(cipher[i] == cipher[i + 1]):
-            if(cipher[i: i + 2] in fre):
-                fre[cipher[i: i + 2]] = fre[cipher[i: i + 2]] + 1
-            else:
-                fre[cipher[i: i + 2]] = 1
-    fre = sorted(fre.items(), key = lambda x:x[1], reverse = True)
-    return [i[0] for i in fre]
 
 def permutation(per, res, a):                                       #返回per中的所有排列变换
     if( len(per) == 1):
@@ -97,35 +81,69 @@ def permutation(per, res, a):                                       #返回per�
         permutation(tmp[1:], res, a_tmp)
 
 
-
 def sub(cipher, source, change):                          #将cipher中字母列表‘source’替换成字母列表中的‘change’, 并返回替换字符串
-    res = []
-    tmp = []
     message = []
-    permutation(source, res, [])
-    for i in res:
-        tmp = []
-        for j in cipher:
-            if(j in source):
-                tmp.append(change[i.index(j)])
-            else:
-                tmp.append(j)
-        message.append(''.join(tmp))
-    return message
+    for i in cipher:
+        message.append(change[source.index(i)])
+    return ''.join(message)
 
-
-def att(cipher):
-    fre = {}
-    message = []
-    alpha = list(set(cipher))
     
 
+                                                        #数组分组[0, 1, 4, 9, 11, 20, 22]
+def att(cipher, n):                                        #找出出现的字母表，并简化标准频率（sta_frequency)
+    sta_frequency = ['e', 't', 'a', 'o', 'i', 'n', 'r', 'h', 's', 'd', 'l', 'c', 'm', 'p', 'u', 'f', 'g', 'w', 'y', 'b', 'k', 'v', 'j', 'x', 'q', 'z']
+    divide = [0, 1, 4, 9, 15, 19, 23, 27]
+    frequency = get_fre(cipher, 1)
+    length = len(frequency)
+    sta_fre = []
+    tmp = 1
+    while( divide[tmp] < length):
+        sta_fre.append(sta_frequency[divide[tmp - 1] : divide[tmp]])
+        tmp = tmp + 1
+    sta_fre.append(sta_frequency[divide[tmp - 1] : length])
+
+    sta_frequency = []
+    permutation(sta_fre[tmp - 1], sta_frequency, [])
+    for i in range(tmp - 2, -1, -1):                                 #将其拼接成替换流
+        tmp = []
+        tmp1 = []
+        permutation(sta_fre[i], tmp1, [])
+        for j in range(len(sta_frequency)):
+            for k in tmp1:
+                tmp.append(k + sta_frequency[j])
+        sta_frequency = tmp
+
+        print("1")
 
 
+        if( len(sta_frequency) > n):
+                a = []
+                for j in sta_fre[:i]:
+                    a = a + j
+                tmp = []
+                for i in sta_frequency:
+                    tmp.append(sub(cipher, frequency, a + i))
+                return tmp
+    
+    tmp = []
+    for i in sta_frequency:
+        tmp.append(sub(cipher, frequency, i))
+    return tmp
 
-# word = input("请输入单表代替密码的密钥:")
-# keys = single_key(word)
-# message = input("请输入明文")
-# cipher = sin_encode(keys, message)
-# print('单表加密的密文为:{0}'.format(cipher) )
-# print('原文是:{0}\n通过单表解密的密文为:{1}'.format(message, sin_decode(keys, cipher)) )
+# s = 'UZ QSO  VUOHXMOPV  GPOZPEVSG ZWSZ OPFPESX UDBMETSX AIZ VUEPHZ  HMDZSHZO WSFP APPD TSVP QUZW  YMXUZUHSX EPYEPOPDZSZUFPO  MB ZWP  FUPZ HMDJ UD TMOHMQ'
+word = input("请输入单表代替密码的密钥:")
+keys = single_key(word)
+message = input("请输入明文:")
+message = ''.join([i.lower() for i in message if(ord(i.lower()) >= 97 and ord(i.lower()) <= 123)])
+cipher = sin_encode(keys, message)
+print('单表加密的密文为:{0}'.format(cipher) )
+print('原文是:{0}\n通过单表解密的密文为:{1}'.format(message, sin_decode(keys, cipher)) )
+
+n = int(input("请输入想要的输出个数:"))
+message_att = att(cipher, n)
+print('下面是自动攻击所给出的单表解密：')
+if( n > len(message_att) ):
+    n = len(message_att)
+for i in range(n):
+    print('No.{0} 原文：   {1}'.format(i + 1, message_att[i]))
+input()

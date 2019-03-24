@@ -40,9 +40,10 @@ def mess2bit(message):
         else:
             bit.append(bin(tmp)[2:].zfill(8))
     bit = ''.join(bit)
+    bit = bit + '00000001'
     length = len(bit)
     if( length % 64 != 0):
-        bit = bit + '00000001' + ''.join(['0'] * ( int( (length + 63) / 64) * 64 - length - 8))
+        bit = bit + ''.join(['0'] * ( int( (length + 63) / 64) * 64 - length))
     return bit
                        
 
@@ -73,6 +74,9 @@ def bit2mess(bits):
         index = index + 8
     return ''.join(mess)
 
+def hex2bit(hex):
+    length = len(hex)
+    return (bin(int(hex, 16))[2:]).zfill(length * 4)
 
 '''*****************************************************************************************
    **************************************************************************************'''
@@ -315,37 +319,43 @@ def Feistel(in_64, key):
     right = xor(left, substi_p( s_box(xor(right_extend(right), key)) ))
     return in_64[32:] + right
 
+
+"""****************************************************************************************
+ ** Date:            2019-03-23 星期六 10:00:02
+ ** Description:     16轮迭代加密
+ ****************************************************************************************"""
 def Des_16(in_64, keys):
     in_64 = ip(in_64)
     print('第IP轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
-         (hex(int(in_64[:32], 2))[2:]).zfill(8) ) )          #表达内部的结果， 可注释
+         (hex(int(in_64[32:], 2))[2:]).zfill(8) ) )          #表达内部的结果， 注释2
     for i in range(16):
         in_64 = Feistel(in_64, keys[i])
         print('第{2:>2}轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
-         (hex(int(in_64[:32], 2))[2:]).zfill(8), i + 1 ) )          #表达内部的结果， 可注释
+        (hex(int(in_64[32:], 2))[2:]).zfill(8), i + 1 ) )          #表达内部的结果， 可注释2
     in_64 = in_64[32:] + in_64[:32]
 
     print('输出   | L: {0:<5} | R：{1:<5}'.format((hex(int(ip_inv(in_64)[:32], 2))[2:]).zfill(8),\
-         (hex(int(ip_inv(in_64)[:32], 2))[2:]).zfill(8)) )          #表达内部的结果， 可注释
+         (hex(int(ip_inv(in_64)[32:], 2))[2:]).zfill(8)) )          #表达内部的结果， 可注释2
     return ip_inv(in_64)
 
 def encode(message, keys):
     cipher = []
     keys = get_keys(keys)
-    #message = mess2bit(message)                    # 注释 1
+    # message = mess2bit(message)                    ### 注释1 ###
     length = len(message)
     while( length > 0):
         cipher.append( Des_16(message[:64], keys) )
         message = message[64:]
         length = length - 64
-    return ''.join(cipher)
+    cipher = ''.join(cipher)
+    return hex(int(cipher, 2))[2:]
 
 
 def decode(cipher, keys):
+    cipher = (bin(int(cipher, 16))[2:]).zfill( int((len(cipher) * 4 + 63) / 64) * 64)
     message = []
     keys = get_keys(keys)
     keys.reverse()
-    #cipher = mess2bit(cipher)                      # 注释2
     length = len(cipher)
     while( length > 0):
         message.append( Des_16(cipher[:64], keys) )
@@ -354,41 +364,39 @@ def decode(cipher, keys):
     return ''.join(message)
 
 
-
 """****************************************************************************************
  ** Date:            2019-03-23 星期六 19:54:12
- ** Description:     注释掉的为交互式输入信息
+ ** Description:     若将   注释1  注释掉 恢复 注释2 ，则为输入16进制数字模式
+                     若将   注释2  注释掉 恢复 注释1 ，则为输入信息模式
  ****************************************************************************************"""
 
 
-
-
-message = int(input('请输入16进制明文:'), 16)  
-keys = int(input('请输入16进制密钥:'), 16)  
-keys_encode = (bin(keys)[2:]).zfill(64)
-print('明文是：{0}'.format( '0x' + (hex(keys)[2:]).zfill(16)))
-print('密钥为：{0}'.format( '0x' + (hex(keys)[2:]).zfill(16)) )
+# message = input("请输入明文：")                                                 ### 注释1 ###         
+message = int(input('请输入16进制明文:')[2:], 16)                                    # 注释2
+keys = input('请输入16进制密钥:')                               
+keys_encode = (bin(int(keys, 16))[2:]).zfill(64)
+print('密钥为：{0}'.format( '0x' + keys) )             
 print("DES16轮加密")
-message_bit = (bin(message)[2:]).zfill(64)
-cipher = encode(message_bit, keys_encode).zfill(64)
-print('最终密文输出为：{0}'.format( '0x' + (hex(int(cipher, 2))[2:]).zfill(16)))
+message = (bin(message)[2:]).zfill(64)                                      # 注释2
+cipher = encode(message, keys_encode)                    
+print('最终密文输出为：{0}'.format('0x' + cipher) ) 
 
 print("")
 
-cipher = int(input('请输入16进制密文:'), 16)
-keys = int(input('请输入16进制密钥:'), 16)  
-keys_decode = (bin(keys)[2:]).zfill(64)
-print('密文文是：{0}'.format( '0x' + (hex(cipher)[2:]).zfill(16)))
-print('密钥为：{0}'.format( '0x' + (hex(keys)[2:]).zfill(16)) )
+cipher = input('请输入16进制密文:')[2:]                                  
+keys = input('请输入16进制密钥:')                                
+keys_decode = (bin(int(keys, 16))[2:]).zfill(64)       
+print('密钥为：{0}'.format( '0x' + keys) )
 print("DES16轮解密")
-cipher_bit = (bin(cipher)[2:]).zfill(64)
-message = decode(cipher_bit, keys_encode).zfill(64)
-print('最终明文输出为：{0}'.format( '0x' + (hex(int(message, 2))[2:]).zfill(16)))
-
+message = decode(cipher, keys_decode)
+# print('最终明文输出为：{0}'.format( bit2mess(message)) )                            ### 注释1 ###
+message = decode(cipher, keys_encode).zfill(64)                                     # 注释2      
+print('最终明文输出为：{0}'.format( '0x' + (hex(int(message, 2))[2:]).zfill(16)))    # 注释2
+input()
 """****************************************************************************************
  ** Date:            2019-03-23 星期六 19:54:12
  ** Description:     输入数据
-                     message: 02468aceeca86420
-                     keys:    0f1571c947d9e859
-                     cipher:  da02ce3a89ecac3b
+                     message: 0x02468aceeca86420
+                     keys:    0x0f1571c947d9e859
+                     cipher:  0xda02ce3a89ecac3b
  ****************************************************************************************"""

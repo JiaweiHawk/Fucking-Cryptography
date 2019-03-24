@@ -7,7 +7,7 @@
 
 
 
-
+import random
 import copy
 
 
@@ -270,17 +270,17 @@ def Feistel(in_64, key):
 
 def Des_3(in_64, keys):
     in_64 = ip(in_64)
-    print('第IP轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
-         (hex(int(in_64[32:], 2))[2:]).zfill(8) ) )          #表达内部的结果
+    # print('第IP轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
+    #      (hex(int(in_64[32:], 2))[2:]).zfill(8) ) )          #表达内部的结果
     for i in range(3):
         in_64 = Feistel(in_64, keys[i])
-        print('第{2:>2}轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
-        (hex(int(in_64[32:], 2))[2:]).zfill(8), i + 1 ) )          #表达内部的结果
+        # print('第{2:>2}轮 | L: {0:<5} | R：{1:<5}'.format((hex(int(in_64[:32], 2))[2:]).zfill(8),\
+        # (hex(int(in_64[32:], 2))[2:]).zfill(8), i + 1 ) )          #表达内部的结果
     
     in_64 = in_64[32:] + in_64[:32]
 
-    print('输出   | L: {0:<5} | R：{1:<5}'.format((hex(int(ip_inv(in_64)[:32], 2))[2:]).zfill(8),\
-         (hex(int(ip_inv(in_64)[32:], 2))[2:]).zfill(8)) )          #表达内部的结果
+    # print('输出   | L: {0:<5} | R：{1:<5}'.format((hex(int(ip_inv(in_64)[:32], 2))[2:]).zfill(8),\
+    #      (hex(int(ip_inv(in_64)[32:], 2))[2:]).zfill(8)) )          #表达内部的结果
     return ip_inv(in_64)
 
 
@@ -297,6 +297,39 @@ def decode(cipher, keys):
     return hex(int(Des_3(cipher, keys), 2))[2:]
 
 
+
+"""****************************************************************************************
+ ** Date:            2019-03-23 星期六 10:00:02
+ ** Description:     实现对3轮DES的差分攻击 
+ ****************************************************************************************"""
+
+def get_data(in_64, keys):
+
+    cipher = encode(in_64, keys)
+
+    cipher = ip( (bin(int(cipher, 16))[2:]).zfill(64) )
+
+    return ( (hex(int(ip(in_64), 2))[2:]).zfill(16), (hex(int(cipher[32:] + cipher[:32], 2))[2:]).zfill(16))
+
+
+def substi_p_inv(in_32):
+    table = [
+        15, 6, 19, 20, 28, 11, 27, 16, 0, 14, 22, 25, 4, 17, 30, 9, \
+        1, 7, 23, 13, 31, 26, 2, 8, 18, 12, 29, 5, 21, 10, 3, 24,
+    ]
+   
+    res = [0] * 32
+    for i in range(32):
+        res[table[i]] = in_32[i]
+    
+    return ''.join(res)
+
+
+def attack():
+    r0 = (hex(random.randint(0, 2 ** 32))[2:]).zfill(32)                       #可修改为特定的值
+
+
+
 message = input('请输入16进制明文:')[2:] 
 message = (bin(int(message, 16))[2:]).zfill(64) 
 keys = input('请输入16进制密钥:')[2:]
@@ -306,3 +339,12 @@ keys_decode = (bin(int(keys, 16))[2:]).zfill(64)
 cipher = encode(message, keys_encode).zfill(16)
 print( cipher )
 print(decode(cipher, keys_decode))
+print( get_data(message, keys_decode))
+
+"""****************************************************************************************
+ ** Date:            2019-03-23 星期六 19:54:12
+ ** Description:     输入数据
+                     message: 0x02468aceeca86420
+                     keys:    0x0f1571c947d9e859
+                     cipher:  0xda02ce3a89ecac3b
+ ****************************************************************************************"""

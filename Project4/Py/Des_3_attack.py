@@ -372,17 +372,18 @@ def attack(r, keys):
 # c = '10010110010111010101101100111111'
 # print( test(e0, e1, c) )
 
-message = input('请输入16进制明文:')[2:] 
-message = (bin(int(message, 16))[2:]).zfill(64) 
-keys = input('请输入16进制密钥:')[2:]
-keys_encode = (bin(int(keys, 16))[2:]).zfill(64)
-keys_decode = (bin(int(keys, 16))[2:]).zfill(64)
+# message = input('请输入16进制明文:')[2:] 
+# message = (bin(int(message, 16))[2:]).zfill(64) 
+# keys = input('请输入16进制密钥:')[2:]
+# keys_encode = (bin(int(keys, 16))[2:]).zfill(64)
+# keys_decode = (bin(int(keys, 16))[2:]).zfill(64)
 
-cipher = encode(message, keys_encode).zfill(16)
-print( (hex(int(cipher, 2))[2:]).zfill(16) )
+# cipher = encode(message, keys_encode).zfill(16)
+# print('加密的密文为：{0}'.format('0x' + (hex(int(cipher, 2))[2:]).zfill(16)))
 # message = (bin(int(message, 16))[2:]).zfill(64)
 # print( (bin(0x02468ace ^ 0x13579bdf ^ 0x91998e98 ^ 0xdd2b1751)[2:]).zfill(32))
-print(attack((bin(int('89ABCDEF', 16))[2:]).zfill(32), (bin(int('0x133457799BBCDFF1', 16))[2:].zfill(64))) )
+cipher = attack((bin(int('89ABCDEF', 16))[2:]).zfill(32), (bin(int('0x133457799BBCDFF1', 16))[2:].zfill(64)))
+print('解密的密钥为：{0}'.format('0x' + cipher))
 """****************************************************************************************
  ** Date:            2019-03-23 星期六 19:54:12
  ** Description:     输入3轮加密

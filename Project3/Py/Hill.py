@@ -63,6 +63,8 @@ def init(m):                    #矩阵的初始化
 
             
 def inv(matrix):                #求矩阵的逆，返回Amod(256)的A    默认矩阵在mod256下可逆
+    if(matrix == None):
+        return None
     A = []
     length = len(matrix)
     for i in range(length):
@@ -71,6 +73,16 @@ def inv(matrix):                #求矩阵的逆，返回Amod(256)的A    默认
         A.append(tmp)
     for row in range(length):
         a = matrix[row][row]
+        if( a == 0):
+            for j in range(row + 1, length):
+                if(matrix[j][row] != 0):
+                    for i in range(length):
+                        matrix[row][i] = matrix[row][i] + matrix[j][i]
+                        A[row][i] = A[row][i] + A[j][i]
+                        a = matrix[row][row]
+                    break
+                else:
+                    return None
         for j in range(length):
             if( j != row and matrix[j][row] != 0):
                 d = gcd(a, matrix[j][row])
@@ -97,6 +109,8 @@ def show(matrix):
         print('')
 
 def mul(a, b):                  #矩阵的相乘
+    if(a == None or b == None):
+        return None
     alen = len(a)
     blen = len(b)
     if( alen != blen):
@@ -184,6 +198,9 @@ def hill_decode(keys, cipher):            #进行解密，输出为明文信息�
     message = []
     tmp = []
     k = inv(keys)
+    if(k == None):
+        print('矩阵不可逆')
+        return None
     cipher_matrix = []
     length = len(keys)
     length2 = length * length
@@ -395,6 +412,9 @@ def attack(message, cipher, m):
         for i in range(m):
                 message_matrix.append([])
                 for j in range(m):
+                    if(index + i * m + j >= len(message_stream)):
+                        print("输入太短")
+                        return None
                     message_matrix[i].append(message_stream[index + i * m + j])
         flag = inv(message_matrix)
 

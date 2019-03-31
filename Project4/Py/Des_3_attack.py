@@ -382,13 +382,19 @@ def attack(r, keys):
 # print('加密的密文为：{0}'.format('0x' + (hex(int(cipher, 2))[2:]).zfill(16)))
 # message = (bin(int(message, 16))[2:]).zfill(64)
 # print( (bin(0x02468ace ^ 0x13579bdf ^ 0x91998e98 ^ 0xdd2b1751)[2:]).zfill(32))
-cipher = attack((bin(int('89ABCDEF', 16))[2:]).zfill(32), (bin(int('0x133457799BBCDFF1', 16))[2:].zfill(64)))
-print('解密的密钥为：{0}'.format('0x' + cipher))
+cipher_odd = attack((bin(int('89ABCDEF', 16))[2:]).zfill(32), (bin(int('0x0f1571c947d9e859', 16))[2:].zfill(64)))
+cipher_even = list((bin(int(copy.deepcopy(cipher_odd), 16))[2:]).zfill(64))
+for i in range(7, 64, 8):
+    #print(cipher_even[i], end = '  ')
+    #print((ord(cipher_even[i]) ^ 48))
+    cipher_even[i] = chr((ord(cipher_even[i]) ^ 49) + 48)
+print('解密的密钥为（采用奇校验）：{0}'.format('0x' + cipher_odd))
+print('解密的密钥为（采用偶校验）：{0}'.format('0x' + (hex(int(''.join(cipher_even), 2))[2:]).zfill(16)))
 """****************************************************************************************
  ** Date:            2019-03-23 星期六 19:54:12
  ** Description:     输入3轮加密
                      message: 0x0123456789ABCDEF
-                     keys:    0x133457799BBCDFF1
+                     keys:    0x0f1571c947d9e859
                      cipher:  0x1caaef374cb63528
 
  ****************************************************************************************"""

@@ -233,7 +233,6 @@ def double_des_decode(cipher, k1, k2):
 def double_des_attack(k1, k2):
     message_known = (bin(random.randint(0, 2 ** 8))[2:]).zfill(8)
     cipher_known = double_des_encode(message_known, k1, k2)
-    #print(sdes_decode(cipher_known, ))
     all_possible_key1 = {}                                          # key:E(k1, message)
     k1_k2_set = []
     for i in range(0, 2 ** 10):
@@ -243,7 +242,6 @@ def double_des_attack(k1, k2):
             all_possible_key1[tmp1] = []
         all_possible_key1[tmp1].append(tmp)
 
-    #print(all_possible_key1)
     for i in range(0, 2 ** 10):
         tmp = (bin(i)[2:]).zfill(10)
         tmp1 = (hex(int(sdes_decode(cipher_known, tmp), 2))[2:]).zfill(2)
@@ -307,12 +305,12 @@ def double_des_attack(k1, k2):
 # print('0x' + (hex(int(message, 2))[2:]).zfill(2))
 
 # print('0x' + (hex(int(sdes_decode('f1', '1010000010'), 2))[2:]).zfill(2))
-
-print( double_des_attack('1010010010', '0101010001') )
+k1 = '1010010010'
+k2 = '0101010001'
+print('待求解的密钥一是：b\'{0}  密钥二是：b\'{1}'.format(k1,k2))
+k1_get, k2_get = double_des_attack(k1, k2)
+print('结果为——密钥一是：b\'{0}  密钥二是：b\'{1}'.format(k1_get,k2_get))
 """****************************************************************************************
  ** Date:            2019-03-23 星期六 19:54:12
  ** Description:     输入数据
-                     message: 0x5e
-                     keys:    1010000010
-                     cipher:  0x
  ****************************************************************************************"""

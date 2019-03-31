@@ -367,10 +367,6 @@ def attack(r, keys):
     
 
 
-# e0 = '000000000111111000001110100000000110100000001100'
-# e1 = '101111110000001010101100000001010100000001010010'
-# c = '10010110010111010101101100111111'
-# print( test(e0, e1, c) )
 
 # message = input('请输入16进制明文:')[2:] 
 # message = (bin(int(message, 16))[2:]).zfill(64) 
@@ -382,6 +378,8 @@ def attack(r, keys):
 # print('加密的密文为：{0}'.format('0x' + (hex(int(cipher, 2))[2:]).zfill(16)))
 # message = (bin(int(message, 16))[2:]).zfill(64)
 # print( (bin(0x02468ace ^ 0x13579bdf ^ 0x91998e98 ^ 0xdd2b1751)[2:]).zfill(32))
+key_guess = '0x0f1571c947d9e859'
+print('待求密钥为：{0}'.format(key_guess))
 cipher_odd = attack((bin(int('89ABCDEF', 16))[2:]).zfill(32), (bin(int('0x0f1571c947d9e859', 16))[2:].zfill(64)))
 cipher_even = list((bin(int(copy.deepcopy(cipher_odd), 16))[2:]).zfill(64))
 for i in range(7, 64, 8):

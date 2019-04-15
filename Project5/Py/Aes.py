@@ -259,8 +259,8 @@ def aes_decode(cipher, key):
                 message[b:b+2] = tmp1
     return ''.join(message)
 
-
-print( aes_decode(aes_encode('0123456789abcdeffedcba9876543210', '0f1571c947d9e8590cb7add6af7f6798'), '0f1571c947d9e8590cb7add6af7f6798'))
+if(__name__ =='__main__'):
+    print( aes_decode(aes_encode('0123456789abcdeffedcba9876543210', '0f1571c947d9e8590cb7add6af7f6798'), '0f1571c947d9e8590cb7add6af7f6798'))
 # print(aes_encode('0123456789abcdeffedcba9876543210', '0f1571c947d9e8590cb7add6af7f6798'))
 # print(aes_decode('ff0b844a0853bf7c6934ab4364148fb9', '0f1571c947d9e8590cb7add6af7f6798'))
 """****************************************************************************************

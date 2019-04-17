@@ -120,7 +120,7 @@ def encode_ctr():
     path = [1] * 2
     path[0] = os.getcwd()
     path[1] = os.getcwd()
-    top1.geometry('800x840')
+    top1.geometry('800x800')
     encode_path = [None]
 
     encode_frame = Frame(top1)
@@ -155,6 +155,7 @@ def encode_ctr():
 
     encode_dir['yscrollcommand'] = encode_srollbar.set
     encode_srollbar['command'] = encode_dir.yview
+
 
     for i in encode_context():
         encode_dir.insert(END, i)
@@ -199,26 +200,27 @@ def encode_ctr():
     decode_file = Label(top1, width=15, height=2, relief='sunken', bd='2',
                         fg='red', font=('黑体', 11, 'bold'))
     decode_file.config(text='请输入文件名称:')
-    decode_file.place(x=10, y=670)
+    decode_file.place(x=10, y=630)
     ##########################################################################
 
     decode_dir = Listbox(decode_frame, width=57, height=10, relief='sunken', bd='2', font=('黑体', 14, 'bold'))
     decode_srollbar = Scrollbar(decode_frame)
     decode_srollbar.pack(side=RIGHT, fill=Y)
     decode_get = [Entry(top1, width = 40, font=('黑体', 14, 'bold'))]
-    decode_get[0].place(x = 200, y = 680)
+    decode_get[0].place(x = 200, y = 630)
 
     key_get = [Entry(top1, width=34, font=('黑体', 14, 'bold'))]
-    key_get[0].place(x = 250, y=720)
+    key_get[0].place(x = 250, y=670)
     key_place = Label(top1, width=14, text = '输入16进制秘钥:', height=1, relief='sunken', bd='2',
                          fg='blue', font=('黑体', 11, 'bold'))
-    key_place.place(x = 50, y = 720)
+    key_place.place(x = 50, y = 670)
     t_get = [Entry(top1, width=34, font=('黑体', 14, 'bold'))]
-    t_get[0].place(x=250, y=750)
+    t_get[0].place(x=250, y=700)
     t_place = Label(top1, width=15, text = '请输入十进制的t:', height=1, relief='sunken', bd='2',
                          fg='blue', font=('黑体', 11, 'bold'))
-    t_place.place(x=50, y=750)
+    t_place.place(x=50, y=700)
     ############################################################################
+
 
     # 获取当前目录下所有文件
     def decode_context():
@@ -265,7 +267,7 @@ def encode_ctr():
     bash = Label(top1, width=60, height=2, relief='sunken', bd='2',
                  fg='red', font=('黑体', 11, 'bold'))
     bash.config(text='等待设置完成')
-    bash.place(x=150, y=790)
+    bash.place(x=150, y=730)
 
 
     def encode():
@@ -277,7 +279,7 @@ def encode_ctr():
             bash.config(text = '加密完成')
 
     encode_sub = Button(top1, width=10, text='开始加密', relief='sunken', bd='2', font=('黑体', 10, 'bold'), command=encode)
-    encode_sub.place(x=10, y=795)
+    encode_sub.place(x=10, y=735)
 
 
     top1.mainloop()
@@ -296,7 +298,7 @@ def decode_ctr():
     path = [1] * 2
     path[0] = os.getcwd()
     path[1] = os.getcwd()
-    top1.geometry('800x840')
+    top1.geometry('800x800')
     encode_path = [None]
 
     encode_frame = Frame(top1)
@@ -375,25 +377,25 @@ def decode_ctr():
     decode_file = Label(top1, width=15, height=2, relief='sunken', bd='2',
                         fg='red', font=('黑体', 11, 'bold'))
     decode_file.config(text='请输入文件名称:')
-    decode_file.place(x=10, y=670)
+    decode_file.place(x=10, y=630)
     ##########################################################################
 
     decode_dir = Listbox(decode_frame, width=57, height=10, relief='sunken', bd='2', font=('黑体', 14, 'bold'))
     decode_srollbar = Scrollbar(decode_frame)
     decode_srollbar.pack(side=RIGHT, fill=Y)
     decode_get = [Entry(top1, width = 40, font=('黑体', 14, 'bold'))]
-    decode_get[0].place(x = 200, y = 680)
+    decode_get[0].place(x = 200, y = 630)
 
     key_get = [Entry(top1, width=34, font=('黑体', 14, 'bold'))]
-    key_get[0].place(x = 250, y=720)
+    key_get[0].place(x = 250, y=670)
     key_place = Label(top1, width=14, text = '输入16进制秘钥:', height=1, relief='sunken', bd='2',
                          fg='blue', font=('黑体', 11, 'bold'))
-    key_place.place(x = 50, y = 720)
+    key_place.place(x = 50, y = 670)
     t_get = [Entry(top1, width=34, font=('黑体', 14, 'bold'))]
-    t_get[0].place(x=250, y=750)
+    t_get[0].place(x=250, y=700)
     t_place = Label(top1, width=15, text = '请输入十进制的t:', height=1, relief='sunken', bd='2',
                          fg='blue', font=('黑体', 11, 'bold'))
-    t_place.place(x=50, y=750)
+    t_place.place(x=50, y=700)
     ############################################################################
 
     # 获取当前目录下所有文件
@@ -441,7 +443,7 @@ def decode_ctr():
     bash = Label(top1, width=60, height=2, relief='sunken', bd='2',
                  fg='red', font=('黑体', 11, 'bold'))
     bash.config(text='等待设置完成')
-    bash.place(x=150, y=790)
+    bash.place(x=150, y=730)
 
 
     def decode():
@@ -453,7 +455,7 @@ def decode_ctr():
             bash.config(text = '解密完成')
 
     decode_sub = Button(top1, width=10, text='开始解密', relief='sunken', bd='2', font=('黑体', 10, 'bold'), command=decode)
-    decode_sub.place(x=10, y=795)
+    decode_sub.place(x=10, y=735)
 
 
     top1.mainloop()

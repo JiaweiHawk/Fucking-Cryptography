@@ -43,8 +43,8 @@ def ctr(in_path, out_path, key, t):
     file_in.close()
     file_out.close()
 if(__name__ == '__main__'):
-    in_path = 'C:/python3/test.txt'
-    out_path = 'C:/python3/test_out.txt'
-    tmp = 'C:/python3/ans.txt'
+    in_path = 'D:/data/北航/2019春季/密码学与网络安全/试验/实验5/Py/message.png'
+    out_path = 'D:/data/北航/2019春季/密码学与网络安全/试验/实验5/Py/cipher.txt'
+    tmp = 'D:/data/北航/2019春季/密码学与网络安全/试验/实验5/Py/plaintext.png'
     ctr(in_path, out_path, '0f1571c947d9e8590cb7add6af7f6798', 158423)
     ctr(out_path, tmp, '0f1571c947d9e8590cb7add6af7f6798', 158423)

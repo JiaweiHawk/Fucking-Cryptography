@@ -260,9 +260,17 @@ def aes_decode(cipher, key):
     return ''.join(message)
 
 if(__name__ =='__main__'):
-    print( aes_decode(aes_encode('0123456789abcdeffedcba9876543210', '0f1571c947d9e8590cb7add6af7f6798'), '0f1571c947d9e8590cb7add6af7f6798'))
-# print(aes_encode('0123456789abcdeffedcba9876543210', '0f1571c947d9e8590cb7add6af7f6798'))
-# print(aes_decode('ff0b844a0853bf7c6934ab4364148fb9', '0f1571c947d9e8590cb7add6af7f6798'))
+    message = input('输入明文:')
+    key = input('输入密钥:')
+    print('\n明文为：{0}\n密钥为：{1}'.format(message, key))
+    print('加密的密文是：'+ aes_encode(message, key))
+    
+    print('')
+
+    cipher = input('输入密文:')
+    key = input('输入密钥:')
+    print('\n秘文为：{0}\n密钥为：{1}'.format(cipher, key))
+    print('解密的明文是：'+aes_decode(cipher, key))
 """****************************************************************************************
  ** Date:            2019-04-03 星期三 16:17:37
  ** Description:     

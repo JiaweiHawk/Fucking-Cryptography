@@ -9,7 +9,7 @@
 
 
 #include <stdio.h>
-#include <windows.h>
+#include <time.h>
 #include "qAES_math.h"
 #define TIMES 10000
 
@@ -20,7 +20,7 @@
  *****************************************************************************************/
 
 
-void sub_shift(int (*state)[4], int (*out)[4]) {
+inline void sub_shift(int (*state)[4], int (*out)[4]) {
     int row, col, tmp, hang, lie;
     for(row = 0; row < 4; row++) {
         for(col = 0; col < 4; col++) {
@@ -33,7 +33,7 @@ void sub_shift(int (*state)[4], int (*out)[4]) {
 }
 
 
-void sub_shift_inv(int (*state)[4], int (*out)[4]) {
+inline void sub_shift_inv(int (*state)[4], int (*out)[4]) {
     int row, col, tmp, hang, lie;
     for(row = 0; row < 4; row++) {
         for(col = 0; col < 4; col++) {
@@ -52,7 +52,7 @@ void sub_shift_inv(int (*state)[4], int (*out)[4]) {
 
 
 
-void col_xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
+inline void col_xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
     int col;
     for(col = 0; col < 4; col++) {
         out[0][col] = sheet_gf[state[0][col]][1] ^ sheet_gf[state[1][col]][2]\
@@ -70,7 +70,7 @@ void col_xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
 }
 
 
-void col_inv(int (*state)[4], int (*out)[4]) {
+inline void col_inv(int (*state)[4], int (*out)[4]) {
     int col;
     for(col = 0; col < 4; col++) {
         out[0][col] = sheet_gf[state[0][col]][6] ^ sheet_gf[state[1][col]][4]\
@@ -89,7 +89,7 @@ void col_inv(int (*state)[4], int (*out)[4]) {
 
 
 
-void col_xor_inv(int (*state)[4], int (*out)[4], int (*key)[4]) {
+inline void col_xor_inv(int (*state)[4], int (*out)[4], int (*key)[4]) {
     int col;
     for(col = 0; col < 4; col++) {
         out[0][col] = sheet_gf[state[0][col]][6] ^ sheet_gf[state[1][col]][4]\
@@ -112,7 +112,7 @@ void col_xor_inv(int (*state)[4], int (*out)[4], int (*key)[4]) {
  ** Description:    将state经过密钥为key的轮密钥加后输出到out
  *****************************************************************************************/
 
-void _xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
+inline void _xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
     int col;
     for(col = 0; col < 4; col++) {
         out[0][col] = state[0][col] ^ key[0][col];
@@ -122,7 +122,7 @@ void _xor(int (*state)[4], int (*out)[4], int (*key)[4]) {
     }
 }
 
-void key_generate(int (*key)[4], int (*keys)[4][4]) {
+inline void key_generate(int (*key)[4], int (*keys)[4][4]) {
     int index, hang, lie, row, col;
     for(col = 0; col < 4; col++){
         for(row = 0; row < 4; row++) {
@@ -159,7 +159,7 @@ void key_generate(int (*key)[4], int (*keys)[4][4]) {
 }
 
 
-void qaes_encode(int (*state)[4], int(*out)[4], int (*keys)[4][4]) {
+inline void qaes_encode(int (*state)[4], int(*out)[4], int (*keys)[4][4]) {
     int index;
     _xor(state, out, keys[0]);
 
@@ -215,18 +215,15 @@ int main(void) {
 
 
     int keys[11][4][4], res[4][4];
-    DWORD start = GetTickCount();
+    clock_t start, finish;
+    start = clock();
+    key_generate(key_encode, keys);
     for(int times = 0; times < TIMES; times++) {
-        key_generate(key_encode, keys);
         qaes_encode(state, res, keys);
-
-
-        key_generate(key_decode, keys);
-        qaes_decode(res, state, keys);
     }
-    DWORD end = GetTickCount();
-    double runtime = 1000 * (double)(end - start);
-    printf("10000 times AES encode and decode in %.0fms, average in %.5fus\n",runtime/1000, runtime/TIMES);
+    finish = clock();
+    double runtime = (double)(finish-start);
+    printf("10000 times AES encode and decode in %.0fms, average in %.6fus\n",runtime*1000, 1000000*runtime/TIMES/CLOCKS_PER_SEC);
     
     for(int row = 0; row < 4; row++){
         for(int col = 0; col < 4; col++) {

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define init 1
+#define init 128
 
 
 
@@ -95,9 +95,11 @@ void show(Bigint *ptr) {
     int index;
     reverse(ptr);
     if(ptr->ismin)
-        putchar('-');
+        printf("(-");
     for(index = 0; index < ptr->length; index++)
         putchar(ptr->value[index] + '0');
+	if(ptr->ismin)
+        putchar(')');
     reverse(ptr);
 }
 
@@ -381,29 +383,119 @@ Bigint* qexp(Bigint *base, Bigint *exp) {
     return tmp;
 }
 
-int main(void) {
-    int e;
-    Bigint *a, *b, *c, *d;
-    a = (Bigint*)malloc(sizeof(Bigint));
-    b = (Bigint*)malloc(sizeof(Bigint));
-    c = (Bigint*)malloc(sizeof(Bigint));
-    d = (Bigint*)malloc(sizeof(Bigint));
+
+void add_show(){
+    Bigint *a = (Bigint*)malloc(sizeof(Bigint)), *b = (Bigint*)malloc(sizeof(Bigint)),\
+    *c = (Bigint*)malloc(sizeof(Bigint));
     initial_Bigint(a);
     initial_Bigint(b);
-    // initial_Bigint(c);
-    // initial_Bigint(d);
-    //min(c, a, b);
-    //a = add(a, b);
+    c = add(a, b);
+    show(a);    printf(" + ");  show(b);    printf(" = ");  show(c);
+    free(a->value); free(a);
+    free(b->value); free(b);
+    free(c->value); free(c);
+}
 
-    //a = mul_one(a, 8, 0);
-    //a = mul(a, b);
-    // divide(a, b, c, d);
-    // show(c);
-    // putchar('\n');
-    // show(d);
-    // divide_2(a);
+void min_show(){
+    Bigint *a = (Bigint*)malloc(sizeof(Bigint)), *b = (Bigint*)malloc(sizeof(Bigint)),\
+    *c = (Bigint*)malloc(sizeof(Bigint));
+    initial_Bigint(a);
+    initial_Bigint(b);
+    c = min(a, b);
+    show(a);    printf(" - ");  show(b);    printf(" = ");  show(c);
+	putchar('\n');
+    free(a->value); free(a);
+    free(b->value); free(b);
+    free(c->value); free(c);
+}
+
+void mul_show(){
+    Bigint *a = (Bigint*)malloc(sizeof(Bigint)), *b = (Bigint*)malloc(sizeof(Bigint)),\
+    *c = (Bigint*)malloc(sizeof(Bigint));
+    initial_Bigint(a);
+    initial_Bigint(b);
+    c = mul(a, b);
+    show(a);    printf(" * ");  show(b);    printf(" = ");  show(c);
+	putchar('\n');
+    free(a->value); free(a);
+    free(b->value); free(b);
+    free(c->value); free(c);
+}
+
+void divide_show(){
+    Bigint *a = (Bigint*)malloc(sizeof(Bigint)), *b = (Bigint*)malloc(sizeof(Bigint)),\
+    *c = (Bigint*)malloc(sizeof(Bigint)), *d = (Bigint*)malloc(sizeof(Bigint));
+    initial_Bigint(a);
+    initial_Bigint(b);
+    divide(a, b, c, d);
+    show(a);    printf(" / ");  show(b);    printf(" = \n");  
+    show(c);    printf(" * ");  show(b);    printf(" + ");  show(d);
+	putchar('\n');
+    free(a->value); free(a);
+    free(b->value); free(b);
+    free(c->value); free(c);
+    free(d->value); free(d);
+}
+
+void exp_show(){
+    Bigint *a = (Bigint*)malloc(sizeof(Bigint)), *b = (Bigint*)malloc(sizeof(Bigint)),\
+    *c = (Bigint*)malloc(sizeof(Bigint));
+    initial_Bigint(a);
+    initial_Bigint(b);
+	show(a);	printf(" ^ ");	show(b);
     c = qexp(a, b);
-    show(c);
+    printf(" = ");  show(c);
+	putchar('\n');
+    free(c->value); free(c);
+}
+
+int main(void) {
+    int ch;
+    printf("\nEnter the mode\n");
+    printf("a. add\n");
+    printf("b. min\n");
+    printf("c. mul\n");
+    printf("d. divide\n");
+    printf("e. exp\n");
+    printf("q. quit\n");
+    printf("Enter the mode:");
+    while( (ch = getchar()) != 'q') {
+		getchar();
+        switch (ch)
+        {
+        case 'a':
+            add_show();
+            break;
+        
+        case 'b':
+            min_show();
+            break;
+        
+        case 'c':
+            mul_show();
+            break;
+        
+        case 'd':
+            divide_show();
+            break;
+        
+        case 'e':
+            exp_show();
+            break;
+        default:
+            system("pause");
+			return 0;
+        }
+        printf("\nEnter the mode\n");
+        printf("a. add\n");
+        printf("b. min\n");
+        printf("c. mul\n");
+        printf("d. divide\n");
+        printf("e. exp\n");
+        printf("q. quit\n");
+        printf("Enter the mode:");
+    }
+
     system("pause");
     return 0;
 }

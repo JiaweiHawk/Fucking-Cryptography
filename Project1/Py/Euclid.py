@@ -48,13 +48,13 @@ def euc_gen(a, b):                      #广义Euclid算法
 
 def euc_ext(a, b):                      #Euclid扩展算法
     if( b == 0):
-        return (0, 1)
+        return (1, 0)
     x_pre = 1
     x = 0
     y_pre = 0
     y = 1
-    q = int( a / b)
-    tmp = a % b
+    q = int( a // b)
+    tmp = a - q * b
     while( tmp != 0):
         a = b
         b = tmp
@@ -67,13 +67,14 @@ def euc_ext(a, b):                      #Euclid扩展算法
         y_pre = y
         y = tmp
 
-        q = int(a / b)
-        tmp = a % b
+        q = int(a // b)
+        tmp = a - q * b
     return (x, y)
 
 
 a = int(input("请输入第一个值:"))
 b = int(input("请输入第二个值:"))
+
 print('gcd(a, b) = {0}'.format(gcd(a,b) ))
 
 (x, y) = euc_gen(a, b)

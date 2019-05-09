@@ -40,7 +40,7 @@ def Gf_div(a, b):                   #求解a(x) / b(x) 即多项式的带余除�
 def pol_f(n):
     res = []
     k = ( 1<<n)
-    m = ( 1 << ( int(n / 2) + 1) ) 
+    m = ( 1 << ( int(n / 2)) )
     for i in range( k, 1 << (n + 1)):
         flag = 1
         for j in range(2, m):

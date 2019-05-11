@@ -8,6 +8,7 @@
  ****************************************************************************************"""
 from rsa_math import euc_ext, miller, qexp
 from random import randint
+
 n = [None] * 1
 pk = [None] * 1
 sk = [None] * 1
@@ -70,10 +71,13 @@ def get_key(flag):                      #如果为0表示读取公钥，如果�
     except IOError:
         print("Error, File not found")
         exit()
-
-    while(file_key.readline() != "n的位数\n"):
-        file_key.readline()
-    n_size[0] = int(file_key.readline())
+    try:
+        while(file_key.readline() != "n的位数\n"):
+            file_key.readline()
+        n_size[0] = int(file_key.readline())
+    except EOFError:
+        print("File is wrong")
+        exit()
 
     while(file_key.readline() != "n的值\n"):
         file_key.readline()
@@ -93,7 +97,7 @@ def get_key(flag):                      #如果为0表示读取公钥，如果�
     print("密钥读取完毕\n")
 
 
-def encode():    #message为要加密的特定大小的二进制文件      
+def encode():       
     get_key(0)          #读取公钥用来加密
     try:
         file_in = open("message.png", "rb")
@@ -112,7 +116,7 @@ def encode():    #message为要加密的特定大小的二进制文件
     print("加密成功\n")
     
     
-def decode():    #message为要解密的特定大小的二进制文件      
+def decode():      
     get_key(1)          #读取私钥用来解密
     try:
         file_in = open("cipher.rsa", "rb")
@@ -121,7 +125,7 @@ def decode():    #message为要解密的特定大小的二进制文件
         exit()
     size_read = (n_size[0] + 7) >> 3
     size_write = ((n_size[0] - 1) >> 3) * 2
-    file_out = open("message_new.png", "wb")
+    file_out = open("message_rsa.png", "wb")
     cipher = file_in.read(size_read).hex()
     while(cipher != ''):
         file_out.write(bytes.fromhex( (hex(qexp(int(cipher, 16), sk[0], n[0]))[2:]).zfill(size_write) ))
@@ -135,7 +139,7 @@ def decode():    #message为要解密的特定大小的二进制文件
 
 if(__name__ == '__main__'):
 
-    n_size[0] = int(input("请输入密钥位数:"))
+    n_size[0] = int(input("请输入密钥最少位数:"))
     n_generate()
     encode()
     decode()

@@ -64,6 +64,12 @@ def generate(message, number):
         count = 0
         if(num > number):
             return res
+        
+    if(num < number):
+        tmp = ''.join(message)
+        for i in range(num, number + 1):
+            tmp = tmp + ' \b'
+            res.append(tmp)
     return res
 
 dic = [

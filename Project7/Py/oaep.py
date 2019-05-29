@@ -74,4 +74,4 @@ if(__name__ == '__main__'):
     else:
         cipher = encode(message[-1], ' '.join(message[:-1]))
     print("加密的消息的16进制为:" + str(cipher))
-    print('the message is:' + decode(cipher))
+    print('\nthe message is:' + decode(cipher))

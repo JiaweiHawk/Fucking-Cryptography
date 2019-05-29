@@ -391,6 +391,7 @@ void add_show(){
     initial_Bigint(b);
     c = add(a, b);
     show(a);    printf(" + ");  show(b);    printf(" = ");  show(c);
+    putchar('\n');
     free(a->value); free(a);
     free(b->value); free(b);
     free(c->value); free(c);
@@ -428,7 +429,7 @@ void divide_show(){
     initial_Bigint(a);
     initial_Bigint(b);
     divide(a, b, c, d);
-    show(a);    printf(" / ");  show(b);    printf(" = \n");  
+    show(a);    printf(" = \n");  
     show(c);    printf(" * ");  show(b);    printf(" + ");  show(d);
 	putchar('\n');
     free(a->value); free(a);

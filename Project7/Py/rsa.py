@@ -104,12 +104,12 @@ def encode():
     except IOError:
         print("Error! File not exits")
         exit()
-    size_read = (n_size[0] - 1) >> 3
+    size_read = ((n_size[0] - 1) >> 3) - 1
     size_write = ( (n_size[0] + 7) >> 3 ) * 2
     file_out = open("cipher.rsa", "wb")
     message = file_in.read(size_read).hex()
     while(message != ''):
-        file_out.write(bytes.fromhex( (hex(qexp(int(message, 16), pk[0], n[0]))[2:]).zfill(size_write) ))
+        file_out.write(bytes.fromhex( (hex(qexp(int('11' + message, 16), pk[0], n[0]))[2:]).zfill(size_write) ))
         message = file_in.read(size_read).hex()
     file_in.close()
     file_out.close()
@@ -124,11 +124,13 @@ def decode():
         print("Error! File not exits")
         exit()
     size_read = (n_size[0] + 7) >> 3
-    size_write = ((n_size[0] - 1) >> 3) * 2
     file_out = open("message_rsa.png", "wb")
     cipher = file_in.read(size_read).hex()
     while(cipher != ''):
-        file_out.write(bytes.fromhex( (hex(qexp(int(cipher, 16), sk[0], n[0]))[2:]).zfill(size_write) ))
+        tmp = hex(qexp(int(cipher, 16), sk[0], n[0]))[2:]
+        while(tmp[:2] != '11'):
+            tmp = tmp[2:]
+        file_out.write(bytes.fromhex(tmp[2:]))
         cipher = file_in.read(size_read).hex()
     print("解密成功\n")
     file_in.close()

@@ -46,7 +46,7 @@ def hamc(k, text, hash_mode):     # hash_mode = 1为SHA-1 hash_mode = 3为SHA3
     
 
 def show():
-    file_in = open("message.txt", "r")
+    file_in = open("message.txt", "r", encoding = 'utf-8')
     message = ''
     tmp = file_in.readline()
     
@@ -59,7 +59,7 @@ def show():
     message = bytes(message, encoding = 'utf-8').hex()
 
     file_in.close()
-    file_in = open('hmac.key', 'r')
+    file_in = open('hmac.key', 'r', encoding = 'utf-8')
     key = file_in.readline()
     file_in.close()
 

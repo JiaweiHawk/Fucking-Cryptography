@@ -113,9 +113,6 @@ def att(cipher, n):                                        #找出出现的字�
                 tmp.append(k + sta_frequency[j])
         sta_frequency = tmp
 
-        print("1")
-
-
         if( len(sta_frequency) > n):
                 a = []
                 for j in sta_fre[:i]:
@@ -130,10 +127,18 @@ def att(cipher, n):                                        #找出出现的字�
         tmp.append(sub(cipher, frequency, i))
     return tmp
 
-# s = 'UZ QSO  VUOHXMOPV  GPOZPEVSG ZWSZ OPFPESX UDBMETSX AIZ VUEPHZ  HMDZSHZO WSFP APPD TSVP QUZW  YMXUZUHSX EPYEPOPDZSZUFPO  MB ZWP  FUPZ HMDJ UD TMOHMQ'
+# s = 'the birth of cars have made an enormous change to our life.in the past,we travel from one place to another only by foot,nowaday,cars can do it .its goes withour saying that the invention of cars bring great benefit to all of us.but as proverb goes:no garden without weeds.car is not exception.owing a car has a lot of advantages.for one thing,car provide us the most convient way of transportation.we can get around freely without spenting a lot of time.emotionally,i always found driving is so exciting.for another,its the comfortable to drive a car.In winter.drivers always can stay warm and dry even in rainy whether,in addition,drivers are usually safe in their cars when they are out at night.Cars bring the human merits,their side-effects graudually come to the surface.firstly,to run a car need a lot of oil,which is getting less and less.the increasing number of cars contribute the lacking of energy.secondlly,as  more and more cars are used,the traffic ecpecially in big cities is getting heaver and heavier,which lead to the serious social problem--traffic jam.in addition,the inceasing numbers of cars ,which excaust sent a huge quantities of carbon monoxide into atmosphere.it make the air of cities unbreathabe,it strip people contact with frensh air.therefore,the new energy should be explored to replace the oil so that our envionmental pollution can be avioded .and the strick law should be issued to keep the numbers of cars under control.thus,our heavier traffic can be solluted!'
 word = input("请输入单表代替密码的密钥:")
 keys = single_key(word)
-message = input("请输入明文:")
+file_in = open("message.txt", "r")
+tmp = file_in.read()
+message = ''
+while(tmp != ''):
+    message = message + tmp
+    tmp = file_in.read()
+
+file_in.close()
+
 message = ''.join([i.lower() for i in message if(ord(i.lower()) >= 97 and ord(i.lower()) <= 123)])
 cipher = sin_encode(keys, message)
 print('单表加密的密文为:{0}'.format(cipher) )

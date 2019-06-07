@@ -6,6 +6,27 @@
    **************************************************************************************'''
 from math import log
 import random
+from copy import deepcopy
+
+
+def is_poly(i, n): # i 是要检验的二进制表示， n是多项式的次数
+    length = len(bin(i)[2:]) - 1
+
+    limit = 1 << length         # 如果大于此值就开始转换
+    judge = i - limit
+    tmp = deepcopy(judge) << 1
+    for j in range(n + 1, (2 ** n) - 1):
+        if(tmp > limit):
+            tmp = tmp ^ i
+        if(tmp == 1):
+            return False   
+        tmp = tmp << 1
+
+    if(tmp > limit):
+        tmp = tmp ^ i
+    if(tmp == 1):
+        return True
+    return False
 
 
 def gcd(a, b):                      #Euclid算法
@@ -40,14 +61,14 @@ def Gf_div(a, b):                   #求解a(x) / b(x) 即多项式的带余除�
 def pol_f(n):
     res = []
     k = ( 1<<n)
-    m = ( 1 << ( int(n / 2)) )
+    m = ( 1 << ( (n + 1) >> 1) )
     for i in range( k, 1 << (n + 1)):
         flag = 1
         for j in range(2, m):
             if( Gf_div(i, j)[1] == 0):
                 flag = 0
                 break
-        if( flag == 1):
+        if( flag == 1 and is_poly(i, n)):
             res.append(i)
     return res
 
@@ -78,7 +99,7 @@ for j in pol_r(n + 1, m):
     elif(n == 1):
         print('x + ', end = '')
     n = n - 1
-print("\nGF(2^{0})域的所有本原多项式：".format(f))
+print("\nGF(2^{0})域的{1}个所有本原多项式：".format(f, str(len(pol_f(f)))))
 for j in pol_f(f):
     print( bin(j))
 

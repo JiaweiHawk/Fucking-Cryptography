@@ -7,7 +7,7 @@
  ****************************************************************************************"""
 
 from hashlib import sha1, md5
-from ecc import ecc_mul, G, p, p_len, G_n
+from ecc import ecc_mul, G, p, p_len, G_n, Infin, a, b
 from random import randint
 from sm2_math import bit2bytes_string, bytes_string2bit, point2bytes_string, field2bytes_string, bytes_string2point
 import threading
@@ -24,7 +24,7 @@ v = [160, 128]         #v[0]指密钥杂凑算法的输出bit数，v[1]表示加
  ****************************************************************************************"""
 
 def get_key():
-    key_file = open("sm2.key", "r")
+    key_file = open("sm2.key", "r", encoding = 'utf-8')
 
     k = key_file.readline()
     while(k != '公钥部分\n'):
@@ -67,11 +67,18 @@ def encode(pk, message):
     random_k = randint(1, G_n[0] - 1)
 
     s = ecc_mul(pk, random_k)
+    if(s == Infin[0]):
+        print("s == O!Error")
+        exit()
+
     t_in = bytes_string2bit(field2bytes_string(s[0])) + bytes_string2bit(field2bytes_string(s[1]))
     t = kdf(t_in, klen)
     while(t == '0' * klen):
         random_k = randint(1, G_n[0] - 1)
         s = ecc_mul(get_key(), random_k)
+        if(s == Infin[0]):
+            print("s == O!Error")
+            exit()
         t_in = bytes_string2bit(field2bytes_string(s[0])) + bytes_string2bit(field2bytes_string(s[1]))
         t = kdf(t_in, klen)
     
@@ -123,7 +130,7 @@ def encoder(sem_encode, sem_decode):
 
 # 生成解密方的公钥，
 def key_generate(k):
-    key_file = open("sm2.key", "w")
+    key_file = open("sm2.key", "w", encoding = 'utf-8')
     key_file.write('公钥部分\n')
     point = ecc_mul(G[0], k)
     key_file.write(str(point[0]) + ' ' + str(point[1]) + ' \n')
@@ -132,7 +139,16 @@ def key_generate(k):
 
 def decode(cipher, random_k):
     c1_len = ((((p_len[0] + 7) >> 3) << 1) + 1) << 1
-    s = ecc_mul(bytes_string2point(cipher[:c1_len]), random_k)
+
+    z = bytes_string2point(cipher[:c1_len])
+    if( (z[1] * z[1]) % p[0] != (z[0] ** 3 + a[0] * z[0] + b[0]) % p[0]):
+        print("Error! Not in ecc")
+        exit()
+        
+    s = ecc_mul(z, random_k)
+    if(s == Infin[0]):
+        print('S = O!Error!')
+        exit()
 
     cipher = cipher[c1_len:]
 
@@ -189,12 +205,7 @@ def decoder(sem_encode, sem_decode):
 
 
 if(__name__ == '__main__'):
-    # random_k = randint(1, G_n[0] - 1)
-    # key_generate(random_k)
 
-    # a = bytes("I am you", encoding = 'utf-8').hex()
-    # cipher = encode(a)
-    # print(bytes.fromhex( decode(cipher, random_k)).decode(encoding = 'utf-8') )
     sem_decode = threading.Semaphore(value = 0)
     sem_encode = threading.Semaphore(value = 0)
     thread_decoder = threading.Thread(target = decoder, args = (sem_encode, sem_decode))

@@ -25,7 +25,7 @@ def elgamal_multiply(write_size, x, message):
     return (hex((x * int(message, 16)) % p[0])[2:]).zfill(write_size)
 
 def get_key():
-    key_file = open("Elgamal.key", "r")
+    key_file = open("Elgamal.key", "r", encoding = 'utf-8')
 
     k = key_file.readline()
     while(k != '公钥部分\n'):
@@ -93,7 +93,7 @@ def encoder(sem_encode, sem_decode):
 
 # 生成解密方的公钥，
 def key_generate(k):
-    key_file = open("Elgamal.key", "w")
+    key_file = open("Elgamal.key", "w", encoding = 'utf-8')
     key_file.write('公钥部分\n')
     point = ecc_mul(G[0], k)
     key_file.write(str(point[0]) + ' ' + str(point[1]) + ' \n')

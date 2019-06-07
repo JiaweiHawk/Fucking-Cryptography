@@ -60,7 +60,7 @@ def hash_sha3(message, mode):          #实现sha, 输入为bytes类型
 
 if(__name__ == '__main__'):
 
-    file_in = open("message.txt", "r", encoding = 'utf-8')
+    file_in = open("message.txt", "r")
     message = ''
     tmp = file_in.readline()
     while(tmp != ''):
